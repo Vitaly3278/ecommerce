@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
@@ -16,10 +17,13 @@ class Category(Base):
     products: Mapped[list["Product"]] = relationship("Product", back_populates="category")
 
 
-    parent: Mapped["Category | None"] = relationship("Category",
+    parent: Mapped[Optional["Category"]] = relationship("Category",
                                                         back_populates="children",
                                                         remote_side="Category.id")
     children: Mapped[list["Category"]] = relationship("Category",
                                                       back_populates="parent")
 
 
+if __name__ == "__main__":
+    from sqlalchemy.schema import CreateTable
+    print(CreateTable(Category.__table__))
